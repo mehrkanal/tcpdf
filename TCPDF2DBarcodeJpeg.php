@@ -35,7 +35,7 @@ class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
      * @return bool
      * @public
      */
-    public function createBarcodeJpg($w = 3, $h = 3, $color=[0,0,0,1]) {
+    public function createBarcodeJpg($w = 3, $h = 3, $color=[0,0,0,1], $filename = 'qr_code.jpg') {
         // calculate image size
         $width = ($this->barcode_array['num_cols'] * $w);
         $height = ($this->barcode_array['num_rows'] * $h);
@@ -66,7 +66,7 @@ class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
         foreach ($coordinates as $coordinate) {
             $cmd .= ' -draw \'rectangle '.$coordinate.'\'';
         }
-        $cmd .= ' -colorspace cmyk qr_code.jpg';
+        $cmd .= ' -colorspace cmyk '.escapeshellarg($filename);
         exec($cmd);
         return true;
     }
