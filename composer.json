@@ -1,0 +1,23 @@
+{
+  "name": "mehrkanal/tcpdf",
+  "version": "0.1",
+  "homepage": "http://www.mehrkanal.com/",
+  "type": "library",
+  "description": "Jpg/CMYK Extension for the tecnick.com/tcpdf with ImageMagick",
+  "keywords": ["PDF","tcpdf","PDFD32000-2008","qrcode","datamatrix","pdf417","barcodes", "Imagick"],
+  "license": "LGPLv3",
+  "authors": [
+    {
+      "name": "Nicola Asuni",
+      "email": "info@tecnick.com",
+      "homepage": "http://nicolaasuni.tecnick.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "tecnick.com/tcpdf": ">=6.2.6"
+  },
+  "autoload": {
+    "classmap": []
+  }
+}
