@@ -35,15 +35,13 @@ class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
      * @return bool
      * @public
      */
-    public function createBarcodeJpg($w = 3, $h = 3, $color=[0,0,0,1], $filename = 'qr_code.jpg') {
-        // calculate image size
+    public function createBarcodeJpg($w = , $h = 3, $color=[0,0,0,1], $filename = 'qr_code.jpg') {
+	if (!extension_loaded('imagick')) {
+	    return false;
+	}
         $width = ($this->barcode_array['num_cols'] * $w);
         $height = ($this->barcode_array['num_rows'] * $h);
-        if (extension_loaded('imagick')) {
-            $foreground_color = escapeshellarg('cmyk('.$color[0].'%,'.$color[1].'%,'.$color[2].'%,'.$color[3].'%)');
-        } else {
-            return false;
-        }
+        $foreground_color = escapeshellarg('cmyk('.$color[0].'%,'.$color[1].'%,'.$color[2].'%,'.$color[3].'%)');
         $coordinates = [];
         // print barcode elements
         $y = 0;
@@ -53,8 +51,6 @@ class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
             // for each column
             for ($column = 0; $column < $this->barcode_array['num_cols']; ++$column) {
                 if ($this->barcode_array['bcode'][$row][$column] == 1) {
-                    // draw a single barcode cell
-                    //					$bar->rectangle($x, $y, ($x + $w - 1), ($y + $h - 1));
                     $coordinates[] = $x.','.$y.','.($x + $w - 1).','.($y + $h - 1);
                 }
                 $x += $w;
