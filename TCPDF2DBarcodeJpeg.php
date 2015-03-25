@@ -10,32 +10,18 @@ namespace mehrkanal;
 class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
 
     /**
-     * Send a Jpeg image representation of barcode (requires GD or Imagick library).
-     * @param $w (int) Width of a single rectangle element in pixels.
-     * @param $h (int) Height of a single rectangle element in pixels.
-     * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
-     * @public
-     */
-    public function getBarcodeJPG($w=3, $h=3, $color=[0,0,0,1]) {
-        $data = $this->createBarcodeJpg($w, $h, $color);
-        // send headers
-        header('Content-Type: image/jpeg');
-        header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
-        header('Pragma: public');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        echo $data;
-    }
-
-    /**
      * Return a Jpeg image representation of barcode (requires Imagick library).
-     * @param int $w Width of a single rectangle element in pixels.
-     * @param int $h Height of a single rectangle element in pixels.
-     * @param [float] $color Array of CMYK Values (0-100)
+     *
+     * @param int    $w Width of a single rectangle element in pixels.
+     * @param int    $h Height of a single rectangle element in pixels.
+     * @param array  $color
+     * @param string $filename
+     * @param int    $border
+     *
      * @return bool
      * @public
      */
-    public function createBarcodeJpg($w = , $h = 3, $color=[0,0,0,1], $filename = 'qr_code.jpg') {
+    public function createBarcodeJpg($w = 3, $h = 3, $color=[0,0,0,1], $filename = 'qr_code.jpg', $border = 3) {
 	if (!extension_loaded('imagick')) {
 	    return false;
 	}
@@ -58,11 +44,14 @@ class TCPDF2DBarcodeJpeg extends \TCPDF2DBarcode {
             $y += $h;
         }
 
-        $cmd = 'convert -size '.$width.'x'.$height.' xc:white -fill '.$foreground_color;
+        $extent_width = ($width*($border*0.1))+$width;
+        $extent_height = ($height*($border*0.1))+$height;
+
+        $cmd = 'convert -gravity center -size '.$width.'x'.$height.' xc:white -density 300 -fill '.$foreground_color;
         foreach ($coordinates as $coordinate) {
             $cmd .= ' -draw \'rectangle '.$coordinate.'\'';
         }
-        $cmd .= ' -colorspace cmyk '.escapeshellarg($filename);
+        $cmd .= ' -colorspace cmyk -extent '.$extent_width.'x'.$extent_height.' '.escapeshellarg($filename);
         exec($cmd);
         return true;
     }
